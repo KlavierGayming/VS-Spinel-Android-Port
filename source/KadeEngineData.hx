@@ -1,10 +1,17 @@
 import openfl.Lib;
 import flixel.FlxG;
+import flixel.math.FlxPoint;
 
 class KadeEngineData
 {
     public static function initSave()
     {
+		if (FlxG.save.data.controlMode == null)
+			FlxG.save.data.controlMode = 0;
+
+		if (FlxG.save.data.vpadPositon == null)
+			FlxG.save.data.vpadPositon = new Array<FlxPoint>();
+		
         if (FlxG.save.data.newInput == null)
 			FlxG.save.data.newInput = true;
 

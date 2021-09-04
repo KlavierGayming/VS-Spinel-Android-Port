@@ -265,8 +265,14 @@ class DialogueBox extends FlxSpriteGroup
 				super.update(elapsed);
 			}
 		}
-
-		if (FlxG.keys.justPressed.ANY && !FlxG.keys.justPressed.SPACE && dialogueStarted == true)
+		#if mobileC
+		var justTapped:Bool = false;
+		for (touch in FlxG.touches.list)
+		{
+			justTapped = touch.justPressed;
+		}
+		#end
+		if (FlxG.keys.justPressed.ANY && !FlxG.keys.justPressed.SPACE #if mobileC || justTapped #end && dialogueStarted == true)
 		{
 			if (!isEnding)
 			{

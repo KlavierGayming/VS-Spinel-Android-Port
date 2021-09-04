@@ -7,25 +7,34 @@ import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
 import openfl.Assets;
 import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 
+@:bitmap('art/watermark.png') class WatermarkBitmapData extends BitmapData {}
+
 class Main extends Sprite
 {
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
-	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
+	var zoom:Float = 1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var framerate:Int = 120; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
 	public static var watermarks = true; // Whether to put Kade Engine liteartly anywhere
 
+	public static var path:String = lime.system.System.applicationStorageDirectory;
+
+
 	// You can pretty much ignore everything from here on - your code should go in your states.
+	public static var watermark:Sprite;
+
 
 	public static function main():Void
 	{
@@ -76,42 +85,20 @@ class Main extends Sprite
 		#if !debug
 		initialState = TitleState;
 		#end
+        watermark = new Sprite();
+        watermark.addChild(new Bitmap(new WatermarkBitmapData(0,0))); //Sets the graphic of the sprite to a Bitmap object, which uses our embedded BitmapData class.
+		watermark.alpha = 0.5;
+        watermark.x = 10;
+        watermark.y = 10;
+        addChild(watermark); //Adds the graphic to the NMEPreloader's buffer.
 
 		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 
 		addChild(game);
 		
-		var ourSource:String = "assets/videos/DO NOT DELETE OR GAME WILL CRASH/dontDelete.webm";
-			
-		#if web
-		var str1:String = "HTML CRAP";
-		var vHandler = new VideoHandler();
-		vHandler.init1();
-		vHandler.video.name = str1;
-		addChild(vHandler.video);
-		vHandler.init2();
-		GlobalVideo.setVid(vHandler);
-		vHandler.source(ourSource);
-		#elseif desktop
-		var str1:String = "WEBM SHIT"; 
-		var webmHandle = new WebmHandler();
-		webmHandle.source(ourSource);
-		webmHandle.makePlayer();
-		webmHandle.webm.name = str1;
-		addChild(webmHandle.webm);
-		GlobalVideo.setWebm(webmHandle);
-		#end
-
-		#if !mobile
-		addChild(new FPS(10, 3, 0xFFFFFF));
-		#end
-
-		#if !mobile
 		fpsCounter = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
-
-		#end
 	}
 
 	var game:FlxGame;
