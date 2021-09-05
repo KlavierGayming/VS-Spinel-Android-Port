@@ -52,9 +52,9 @@ class VideoPlayer extends FlxSprite {
 
         pathfile = path;
 
-        var path = Asset2File.getPath(Paths.file(path), ".webm");
+        var path = Asset2File.getPath(path, ".webm");
 
-        videoFrames = Std.parseInt(Assets.getText(Paths.file(pathfile.replace(".webm", ".txt"))));
+        videoFrames = Std.parseInt(Assets.getText(pathfile.replace(".webm", ".txt")));
 
         var io:WebmIo = new WebmIoFile(path);
         player = new WebmPlayer();
@@ -75,7 +75,7 @@ class VideoPlayer extends FlxSprite {
         });
 
         loadGraphic(player.bitmapData);
-        sound = FlxG.sound.play(Paths.file(pathfile.replace('.webm', '.ogg'))); 
+        sound = FlxG.sound.play(pathfile.replace('.webm', '.ogg')); 
         sound.time = sound.length * soundMultiplier;
         doShit = true;
         #end

@@ -347,7 +347,7 @@ class ModchartState
 				
 				//shaders = new Array<LuaShader>();
 
-				var result = LuaL.dofile(lua, Paths.lua(PlayState.SONG.song.toLowerCase().replace(' ','-') + "/modchart")); // execute le file
+				var result = LuaL.dofile(lua, Asset2File.getPath(Paths.luaAsset(PlayState.SONG.song.toLowerCase().replace(' ','-') + "/modchart"), '.lua')); // execute le file
 	
 				if (result != 0)
 				{

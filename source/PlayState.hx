@@ -250,39 +250,22 @@ class PlayState extends MusicBeatState
 				case 'dad-battle': songLowercase = 'dadbattle';
 				case 'philly-nice': songLowercase = 'philly';
 			}
-		#if windows
-		executeModchart = FileSystem.exists(Paths.luaAsset(songLowercase  + "/modchart"));
+		#if llua
+		switch (songLowercase)
+		{
+			case 'apocalypse-party' | 'other-friends' | 'unchangeable':
+				executeModchart = true;
+			default:
+				executeModchart = false;
+		}
+		trace('tried force enable lol');
 		#end
 		#if !cpp
 		executeModchart = false; // FORCE disable for non cpp targets
-		#end
-		#if mobileC
-		if (!executeModchart)
-			{
-				var path = Paths.luaAsset(songLowercase  + "/modchart");
-				var luaFile = openfl.Assets.getBytes(path);
-	
-				//assets/data/wish-i-could-care-less/modchart.lua
-				/*for (dir in path.split("/"))
-				{
-					if (!FileSystem.exists(Main.path + dir) && (dir.indexOf(".") < 0 )) FileSystem.createDirectory(Main.path + dir);
-				}*/
-				FileSystem.createDirectory(Main.path + "assets");
-				FileSystem.createDirectory(Main.path + "assets/data");
-				FileSystem.createDirectory(Main.path + "assets/data/apocalypse-party");
-				FileSystem.createDirectory(Main.path + "assets/data/injector-carousel");
-				FileSystem.createDirectory(Main.path + "assets/data/other-friends");
-				FileSystem.createDirectory(Main.path + "assets/data/unchangeable");
-
-	
-	
-				File.saveBytes(Paths.lua(songLowercase  + "/modchart"), luaFile);
-	
-				executeModchart = FileSystem.exists(Paths.lua(songLowercase  + "/modchart"));
-			}
+		trace('force disabled');
 		#end
 
-		trace('Mod chart: ' + executeModchart + " - " + Paths.luaAsset(songLowercase + "/modchart"));
+		trace('Mod chart: ' + executeModchart + " - " + Paths.luaAsset(songLowercase + '/modchart'));
 
 		#if windows
 		// Making difficulty text for Discord Rich Presence.
@@ -1435,8 +1418,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (!loadRep)
-			rep = new Replay("na");
 
 		super.create();
 	}
@@ -2859,14 +2840,6 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
-		if (!loadRep)
-			rep.SaveReplay(saveNotes);
-		else
-		{
-			FlxG.save.data.botplay = false;
-			FlxG.save.data.scrollSpeed = 1;
-			FlxG.save.data.downscroll = false;
-		}
 
 		if (FlxG.save.data.fpsCap > 290)
 			(cast (Lib.current.getChildAt(0), Main)).setFPSCap(290);
@@ -2996,6 +2969,9 @@ class PlayState extends MusicBeatState
 						inCutscene = true;
 						camZooming = false;
 						resyncingVocals = false;
+						FlxTween.tween(mcontrols, {alpha: 0}, 0.25, {onComplete: function(twn:FlxTween){
+							mcontrols.visible = false;
+						}});
 						FlxG.sound.music.stop();
 						vocals.stop();
 						paused = true;

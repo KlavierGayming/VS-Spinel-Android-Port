@@ -85,16 +85,16 @@ class Main extends Sprite
 		#if !debug
 		initialState = TitleState;
 		#end
-        watermark = new Sprite();
-        watermark.addChild(new Bitmap(new WatermarkBitmapData(0,0))); //Sets the graphic of the sprite to a Bitmap object, which uses our embedded BitmapData class.
-		watermark.alpha = 0.5;
-        watermark.x = 10;
-        watermark.y = 10;
-        addChild(watermark); //Adds the graphic to the NMEPreloader's buffer.
 
 		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 
 		addChild(game);
+		watermark = new Sprite();
+        watermark.addChild(new Bitmap(new WatermarkBitmapData(0,0))); //Sets the graphic of the sprite to a Bitmap object, which uses our embedded BitmapData class.
+		watermark.alpha = 0.5;
+        watermark.x = 150;
+        watermark.y = 10;
+        addChild(watermark); //Adds the graphic to the NMEPreloader's buffer.
 		
 		fpsCounter = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsCounter);
